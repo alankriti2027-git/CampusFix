@@ -7,8 +7,34 @@ import models.IssueStatus;
 public class IssueService {
 
     private ArrayList<Issue> issues = new ArrayList<>();
+    private int nextIssueId = 1;
+
+    public int generateIssueId() {
+        return nextIssueId++;
+    }
 
     public void addIssue(Issue issue) {
+
+        if (issue == null) {
+            System.out.println("Error: Issue cannot be null.");
+            return;
+        }
+
+        if (issue.getTitle() == null || issue.getTitle().trim().isEmpty()) {
+            System.out.println("Error: Issue title cannot be empty.");
+            return;
+        }
+
+        if (issue.getDescription() == null || issue.getDescription().trim().isEmpty()) {
+            System.out.println("Error: Issue description cannot be empty.");
+            return;
+        }
+
+        if (issue.getLocation() == null || issue.getLocation().trim().isEmpty()) {
+            System.out.println("Error: Issue location cannot be empty.");
+            return;
+        }
+
         issues.add(issue);
         System.out.println("Issue reported successfully!");
     }
@@ -42,13 +68,19 @@ public class IssueService {
     }
 
     public ArrayList<Issue> searchIssues(String keyword) {
-
         ArrayList<Issue> results = new ArrayList<>();
 
-        for (Issue issue : issues) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return results;
+        }
 
-            if (issue.getTitle().toLowerCase().contains(keyword.toLowerCase())
-                    || issue.getCategory().toLowerCase().contains(keyword.toLowerCase())) {
+        keyword = keyword.trim().toLowerCase();
+
+        for (Issue issue : issues) {
+            if (issue.getTitle().toLowerCase().contains(keyword)
+                    || issue.getCategory().toLowerCase().contains(keyword)
+                    || issue.getLocation().toLowerCase().contains(keyword)
+                    || issue.getDescription().toLowerCase().contains(keyword)) {
 
                 results.add(issue);
             }
@@ -67,5 +99,17 @@ public class IssueService {
         }
 
         return false;
+    }
+
+    public ArrayList<Issue> getIssuesByStatus(IssueStatus status) {
+        ArrayList<Issue> filteredIssues = new ArrayList<>();
+
+        for (Issue issue : issues) {
+            if (issue.getStatus() == status) {
+                filteredIssues.add(issue);
+            }
+        }
+
+        return filteredIssues;
     }
 }
