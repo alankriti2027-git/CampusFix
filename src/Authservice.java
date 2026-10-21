@@ -1,7 +1,7 @@
 
 import java.util.ArrayList;
 
-public class Authservice {
+public class AuthService {
 
     private ArrayList<User> users = new ArrayList<>();
     private int nextUserId = 1;
